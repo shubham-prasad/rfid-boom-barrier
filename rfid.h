@@ -34,10 +34,12 @@ bool Equal(byte* first, byte* second){
 }
 
 #define AllowCardOffset 1
-#define DenyCardOffset 5
+#define AllowCardOffset2 5
+#define DenyCardOffset 9
 
 enum Card {
   Card_Allow,
+  Card_Allow_2,
   Card_Deny,
   Card_Unknown
 };
@@ -45,6 +47,8 @@ enum Card {
 int checkCard(byte* card){
   if(Equal(readCard(AllowCardOffset), card))
     return Card_Allow;
+  if(Equal(readCard(AllowCardOffset2), card))
+    return Card_Allow_2;
   else if(Equal(readCard(DenyCardOffset), card))
     return Card_Deny;
   else
@@ -54,6 +58,9 @@ int checkCard(byte* card){
 void registerCard(byte* card, int type){
   if(type == Card_Allow){
     storeCard(AllowCardOffset, card);
+  }
+  if(type == Card_Allow_2){
+    storeCard(AllowCardOffset2, card);
   }
   else if(type == Card_Deny){
    storeCard(DenyCardOffset, card);

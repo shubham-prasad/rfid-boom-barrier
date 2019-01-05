@@ -25,4 +25,26 @@ void storeCard(int offset, byte* card){
   }
 }
 
+void storeMovement(int vno) {
+  for ( uint16_t j = 15; j < EEPROM.length(); j++ ) {
+    if(EEPROM.read(j) != 0) continue;
+    EEPROM.write(j, vno);
+    return;
+  }
+}
+
+void replaySavedMovement(void (*fn)(int, byte)) {
+  for ( int j = 15; j < EEPROM.length(); j++ ) {
+    if(EEPROM.read(j) == 0) break;
+    (*fn)(j - 15, EEPROM.read(j));
+  }
+}
+
+void wipeSavedMovement() {
+  for (uint16_t x = 15; x < EEPROM.length(); x = x + 1) { //Loop end of EEPROM address
+    if (EEPROM.read(x) == 0) continue ; // already clear
+    EEPROM.write(x, 0);       // if not write 0 to clear, it takes 3.3mS
+  }
+}
+
 #endif
